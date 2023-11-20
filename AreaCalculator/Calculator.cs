@@ -36,19 +36,6 @@ namespace AreaCalculator
             }
             existing.AddFigureDefinition(areaEquation, defintionParameters);
         }
-
-        public static float CalculateTriangleArea(float sideA, float sideB, float sideC)
-        {
-            List<float> sides = new List<float>() { sideA, sideB, sideC };
-            sides.Sort();
-            if (Math.Pow(sides[0], 2) + Math.Pow(sides[0], 2) == Math.Pow(sides[2], 2))
-                return sides[0] * sides[1] / 2f;
-            else
-            {
-                float halfPerimeter = (sideA + sideB + sideC) / 2f;
-                return (float)Math.Sqrt(halfPerimeter * (halfPerimeter - sideA) * (halfPerimeter - sideB) * (halfPerimeter - sideC));
-            }
-        }
     }
 
     public class FigureDefintionToAreaEquation
@@ -71,12 +58,6 @@ namespace AreaCalculator
                 parsedEquation = parsedEquation.Replace($"[{i.ParameterName}]", $"({i.ParameterValue})");
             }
             return Convert.ToSingle( Z.Expressions.Eval.Execute(parsedEquation));
-        }
-
-        static float Distance(float x1, float y1, float x2, float y2)
-        {
-            float xOffset = Math.Abs(x2 - x1), yOffset = Math.Abs(y2 - y1);
-            return (float)Math.Sqrt(xOffset * xOffset + yOffset * yOffset);
         }
     }
 

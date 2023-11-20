@@ -82,7 +82,7 @@ while (true)
                     Console.Write("Parameter Description (May be skipped): ");
                     parameters[i] = (name, Console.ReadLine());
                 }
-                Console.Write("Type Area equation (parameters should be quoted into '[]' e.g. sqrt(10+[a]): ");
+                Console.Write("Type Area equation (parameters should be quoted into '[]' e.g. sqrt(PI*10+[a]): ");
                 string areaEquation = Console.ReadLine();
                 Calculator.AddCustomFigureDefinition(figureName, areaEquation, parameters);
                 break;
