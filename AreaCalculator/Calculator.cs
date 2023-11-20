@@ -17,7 +17,7 @@ namespace AreaCalculator
             supportedEquestions.Add(cube.Name, cube);
 
             var triangle = new Figure("Triangle");
-            triangle.AddFigureDefinition("sqrt(([a]+[b]+[c])/2 * (([a]+[b]+[c])/2 - [a]) * (([a]+[b]+[c])/2 - [b]) * (([a]+[b]+[c])/2 - [c]))", ("a", "Second side"), ("b", "First side"), ("c", "Third side"));
+            triangle.figureDefintionToAreaEquations.Add(new TriangleDefinition("sqrt(([a]+[b]+[c])/2 * (([a]+[b]+[c])/2 - [a]) * (([a]+[b]+[c])/2 - [b]) * (([a]+[b]+[c])/2 - [c]))", ("a", "Second side"), ("b", "First side"), ("c", "Third side")));
             supportedEquestions.Add(triangle.Name, triangle);
         }
         #endregion
@@ -38,6 +38,24 @@ namespace AreaCalculator
         }
     }
 
+    internal class TriangleDefinition : FigureDefintionToAreaEquation
+    {
+        public TriangleDefinition(string areaEquation, params (string Name, string Description)[] defintionParameters) : base(areaEquation,defintionParameters)
+        {
+
+        }
+
+        public override float Calculate(params (string ParameterName, float ParameterValue)[] values)
+        {
+            var sorted = values.Select(x=>x.ParameterValue).ToList();
+            sorted.Sort();
+            if (Math.Pow(sorted[0], 2) + Math.Pow(sorted[1], 2) == Math.Pow(sorted[2], 2))
+                return (sorted[0] * sorted[1]) / 2;
+            else
+                return base.Calculate(values);
+        }
+    }
+
     public class FigureDefintionToAreaEquation
     {
         public Dictionary<string, string> ParametersDescriptions;
@@ -49,7 +67,7 @@ namespace AreaCalculator
             ParametersDescriptions = defintionParameters.ToDictionary(x => x.Name, x => x.Description);
         }
 
-        public float Calculate(params (string ParameterName, float ParameterValue)[] values)
+        public virtual float Calculate(params (string ParameterName, float ParameterValue)[] values)
         {
             string parsedEquation = AreaEquation;
 
@@ -64,18 +82,20 @@ namespace AreaCalculator
     public class Figure
     {
         public string Name;
-        public List<FigureDefintionToAreaEquation> FigureDefintionToAreaEquations;
+        internal List<FigureDefintionToAreaEquation> figureDefintionToAreaEquations;
 
 
         internal Figure(string name)
         {
             this.Name = name;
-            FigureDefintionToAreaEquations = new List<FigureDefintionToAreaEquation>();
+            figureDefintionToAreaEquations = new List<FigureDefintionToAreaEquation>();
         }
 
         public void AddFigureDefinition(string areaEquation, params (string Name, string Description)[] defintionParameters)
         {
-            FigureDefintionToAreaEquations.Add(new FigureDefintionToAreaEquation(areaEquation, defintionParameters));
+            figureDefintionToAreaEquations.Add(new FigureDefintionToAreaEquation(areaEquation, defintionParameters));
         }
+
+        public List<FigureDefintionToAreaEquation> FigureDefintionToAreaEquations { get => new List<FigureDefintionToAreaEquation>(figureDefintionToAreaEquations); }
     }
 }
